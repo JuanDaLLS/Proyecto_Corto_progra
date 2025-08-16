@@ -24,6 +24,14 @@ def menu():
         elif opcion == '2':
             limpiar_consola()
             print("=== AHORRO ===")
+            try:
+                inversion_mensual = float(input("Ingrese su inversión mensual: "))
+                meses = int(input("Ingrese el número de meses: "))
+                interes = float(input("Ingrese la tasa de interés mensual: ")) / 100
+            except ValueError:
+                print("Error: Por favor, ingrese valores numéricos válidos.")
+                input("Presione Enter para continuar...")
+                continue
             input("\nPresione Enter para volver al menú...")
             
         elif opcion == '3':
@@ -42,7 +50,22 @@ def menu():
 menu()
 
 class Ahorro:
-    def __init__ (self, inversion_mensual, meses, tasa_interes):
-        self.inversion_mensual = inversion_mensual
-        self.meses = meses
-        self.tasa_interes = tasa_interes
+    def __init__ (self, inversion_mensual, meses, tasa_inflacion, interes):
+        self.__inversion_mensual = inversion_mensual
+        self.__meses = meses
+        self.__tasa_inflacion = tasa_inflacion
+        self.__interes = interes
+        self.__ahorro_total = 0
+
+class InteresAnual(Ahorro):
+    def __init__ (self, TasaMensual):
+        super(). __init__(self, self.__tasa_inflacion, self.__meses)
+        self.__TasaMensual = TasaMensual
+    def calcular_infacionAnual(self):
+        return (1 + self.__TasaMensual) ** (1/12) - 1
+
+
+
+
+
+    
