@@ -4,16 +4,18 @@ from PROYECTO_1 import Ahorro
 def limpiar_consola():
     os.system('cls' if os.name == 'nt' else 'clear')
 
-def leer_float(mensaje: str, permitir_vacio: bool = False, por_ciento: bool = False, default: float = 0.0) -> float:
+def leer_numero(mensaje, porcentaje=False):
     while True:
-        s = input(mensaje).strip()
-        if s == "" and permitir_vacio:
-            return default
+        valor = input(mensaje)
+        if valor == "":
+            return 0
         try:
-            x = float(s)
-            return x/100.0 if por_ciento else x
-        except ValueError:
-            print("Entrada inválida. Intente de nuevo.")
+            numero = float(valor)
+            if porcentaje:
+                return numero / 100
+            return numero
+        except:
+            print("Entrada inválida, intente de nuevo.")
 
 def menu():
     plan = None
