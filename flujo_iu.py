@@ -18,14 +18,15 @@ def leer_numero(mensaje, porcentaje=False):
             print("Entrada inválida, intente de nuevo.")
 
 def menu():
-    plan = None
+    plan_definido = False
+    plan = 0  
     while True:
         limpiar_consola()
         print("=== PROGRAMA DE AHORRO ===")
         print("1. Instrucciones de uso")
         print("2. Empezar a ahorrar (definir plan)")
         print("3. Ver proyección de ahorro")
-        print("4. Ver avances mes a mes")   
+        print("4. Ver avances mes a mes")
         print("5. Salir")
 
         opcion = input("\nSeleccione una opción: ")
