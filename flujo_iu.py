@@ -1,49 +1,78 @@
 import os
+from PROYECTO_1 import Ahorro
 
 def limpiar_consola():
     os.system('cls' if os.name == 'nt' else 'clear')
 
-def menu():
+def leer_float(mensaje: str, permitir_vacio: bool = False, por_ciento: bool = False, default: float = 0.0) -> float:
     while True:
-        limpiar_consola()  
+        s = input(mensaje).strip()
+        if s == "" and permitir_vacio:
+            return default
+        try:
+            x = float(s)
+            return x/100.0 if por_ciento else x
+        except ValueError:
+            print("Entrada inválida. Intente de nuevo.")
+
+def menu():
+    plan = None
+    while True:
+        limpiar_consola()
         print("=== PROGRAMA DE AHORRO ===")
         print("1. Instrucciones de uso")
-        print("2. Empezar a ahorrar")
+        print("2. Empezar a ahorrar (definir plan)")
         print("3. Ver proyección de ahorro")
-        print("4. Salir")
-        
+        print("4. Ver avances mes a mes")   
+        print("5. Salir")
+
         opcion = input("\nSeleccione una opción: ")
-        
+
         if opcion == '1':
             limpiar_consola()
             print("=== INSTRUCCIONES ===")
-            print("1. Ingrese sus datos financieros...")
-            print("2. Calcule su capacidad de ahorro...")
+            print("- Opción 2: ingresa tu aporte mensual, meses y tasa mensual (%).")
+            print("  Opcional: inflación anual (%) para ver el valor real.")
+            print("- Opción 3: muestra tu proyección final nominal y real.")
+            print("- Opción 4: muestra una tabla de avances mes a mes (con intereses y ajuste por inflación).")
             input("\nPresione Enter para volver al menú...")
-            
+
         elif opcion == '2':
             limpiar_consola()
-            print("=== AHORRO ===")
+            print("=== DEFINIR PLAN DE AHORRO ===")
             try:
-                inversion_mensual = float(input("Ingrese su inversión mensual: "))
-                meses = int(input("Ingrese el número de meses: "))
-                interes = float(input("Ingrese la tasa de interés mensual: ")) / 100
-            except ValueError:
-                print("Error: Por favor, ingrese valores numéricos válidos.")
-                input("Presione Enter para continuar...")
-                continue
+                inversion_mensual = leer_float("Ingrese su inversión mensual (Q): ", permitir_vacio=False)
+                meses = int(leer_float("Ingrese el número de meses: ", permitir_vacio=False))
+                interes_mensual = leer_float("Ingrese la tasa de interés MENSUAL (%): ", por_ciento=True)
+                inflacion_anual = leer_float("Inflación anual (%) [Enter = 0]: ", permitir_vacio=True, por_ciento=True, default=0.0)
+                plan = Ahorro(inversion_mensual, meses, interes_mensual, inflacion_anual)
+                print("\nPlan guardado correctamente.")
+            except Exception as e:
+                print(f"\nError: {e}. Verifique los datos ingresados.")
             input("\nPresione Enter para volver al menú...")
-            
+
         elif opcion == '3':
             limpiar_consola()
             print("=== PROYECCIÓN ===")
-            # No se imprime nada, pero no lanza errores
+            if plan is None:
+                print("Primero define tu plan en la opción 2.")
+            else:
+                print(plan.resumen(pv=0.0))
             input("\nPresione Enter para volver al menú...")
-            
+
         elif opcion == '4':
+            limpiar_consola()
+            print("=== AVANCES MES A MES ===")
+            if plan is None:
+                print("Primero define tu plan en la opción 2.")
+            else:
+                print(plan.tabla_avances(pv=0.0))
+            input("\nPresione Enter para volver al menú...")
+
+        elif opcion == '5':
             print("\nSaliendo del programa...")
             break
-            
+
         else:
             print("\nOpción no válida. Intente nuevamente.")
             input("Presione Enter para continuar...")
