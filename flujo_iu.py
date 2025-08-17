@@ -31,48 +31,50 @@ def menu():
 
         opcion = input("\nSeleccione una opción: ")
 
-        if opcion == '1':
+        if opcion == "1":
             limpiar_consola()
             print("=== INSTRUCCIONES ===")
-            print("- Opción 2: ingresa tu aporte mensual, meses y tasa mensual (%).")
-            print("  Opcional: inflación anual (%) para ver el valor real.")
-            print("- Opción 3: muestra tu proyección final nominal y real.")
-            print("- Opción 4: muestra una tabla de avances mes a mes (con intereses y ajuste por inflación).")
+            print("- En la opción 2 define tu inversión mensual, los meses y la tasa de interés mensual.")
+            print("- Opcional: puedes ingresar la inflación anual (si no, deja vacío).")
+            print("- En la opción 3 verás tu proyección final.")
+            print("- En la opción 4 verás la tabla de avances.")
             input("\nPresione Enter para volver al menú...")
 
-        elif opcion == '2':
+        elif opcion == "2":
             limpiar_consola()
             print("=== DEFINIR PLAN DE AHORRO ===")
             try:
-                inversion_mensual = leer_float("Ingrese su inversión mensual (Q): ", permitir_vacio=False)
-                meses = int(leer_float("Ingrese el número de meses: ", permitir_vacio=False))
-                interes_mensual = leer_float("Ingrese la tasa de interés MENSUAL (%): ", por_ciento=True)
-                inflacion_anual = leer_float("Inflación anual (%) [Enter = 0]: ", permitir_vacio=True, por_ciento=True, default=0.0)
+                inversion_mensual = leer_numero("Ingrese su inversión mensual (Q): ")
+                meses = int(leer_numero("Ingrese el número de meses: "))
+                interes_mensual = leer_numero("Ingrese la tasa de interés MENSUAL (%): ", True)
+                inflacion_anual = leer_numero("Inflación anual (%) [Enter = 0]: ", True)
+
                 plan = Ahorro(inversion_mensual, meses, interes_mensual, inflacion_anual)
+                plan_definido = True
                 print("\nPlan guardado correctamente.")
-            except Exception as e:
-                print(f"\nError: {e}. Verifique los datos ingresados.")
+            except:
+                print("\nError, verifique los datos ingresados.")
             input("\nPresione Enter para volver al menú...")
 
-        elif opcion == '3':
+        elif opcion == "3":
             limpiar_consola()
             print("=== PROYECCIÓN ===")
-            if plan is None:
-                print("Primero define tu plan en la opción 2.")
+            if not plan_definido:
+                print("Primero debe definir su plan en la opción 2.")
             else:
-                print(plan.resumen(pv=0.0))
+                print(plan.resumen(0.0))
             input("\nPresione Enter para volver al menú...")
 
-        elif opcion == '4':
+        elif opcion == "4":
             limpiar_consola()
             print("=== AVANCES MES A MES ===")
-            if plan is None:
-                print("Primero define tu plan en la opción 2.")
+            if not plan_definido:
+                print("Primero debe definir su plan en la opción 2.")
             else:
-                print(plan.tabla_avances(pv=0.0))
+                print(plan.tabla_avances(0.0))
             input("\nPresione Enter para volver al menú...")
 
-        elif opcion == '5':
+        elif opcion == "5":
             print("\nSaliendo del programa...")
             break
 
