@@ -25,13 +25,13 @@ class Ahorro:
         return pv * (1 + i) ** n + pago * (((1 + i) ** n - 1) / i)
 
 
-    def fv_real(self, pv: float = 0.0) -> float:
+    def fv_real(self, pv=0):
         fv = self.fv_nominal(pv)
         pi_m = self.inflacion_mensual()
-        n = self.__meses
-        if abs(pi_m) < 1e-12:
+        n = self.meses
+        if pi_m == 0:
             return fv
-        return fv / ((1 + pi_m)**n)
+        return fv / ((1 + pi_m) ** n)
 
     def resumen(self, pv: float = 0.0) -> str:
         fv_nom = self.fv_nominal(pv)
