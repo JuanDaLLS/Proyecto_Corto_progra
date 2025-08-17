@@ -14,15 +14,16 @@ class Ahorro:
     def inflacion_mensual(self) -> float:
         return (1 + self.__inflacion_anual)**(1/12) - 1
 
-    def fv_nominal(self, pv: float = 0.0) -> float:
-        i = self.__interes
-        n = self.__meses
-        PMT = self.__inversion_mensual
+    def fv_nominal(self, pv=0):
+        i = self.interes
+        n = self.meses
+        pago = self.pago
         if n == 0:
-            return float(pv)
-        if abs(i) < 1e-12:
-            return float(pv) + PMT * n
-        return float(pv) * (1 + i)**n + PMT * (((1 + i)**n - 1) / i)
+            return pv
+        if i == 0:
+            return pv + pago * n
+        return pv * (1 + i) ** n + pago * (((1 + i) ** n - 1) / i)
+
 
     def fv_real(self, pv: float = 0.0) -> float:
         fv = self.fv_nominal(pv)
