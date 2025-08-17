@@ -3,69 +3,44 @@ import os
 def limpiar_consola():
     os.system('cls' if os.name == 'nt' else 'clear')
 
-def menu():
-    while True:
-        limpiar_consola()  
-        print("=== PROGRAMA DE AHORRO ===")
-        print("1. Instrucciones de uso")
-        print("2. Empezar a ahorrar")
-        print("3. Ver proyección de ahorro")
-        print("4. Salir")
-        
-        opcion = input("\nSeleccione una opción: ")
-        
-        if opcion == '1':
-            limpiar_consola()
-            print("=== INSTRUCCIONES ===")
-            print("1. Ingrese sus datos financieros...")
-            print("2. Calcule su capacidad de ahorro...")
-            input("\nPresione Enter para volver al menú...")
-            
-        elif opcion == '2':
-            limpiar_consola()
-            print("=== AHORRO ===")
-            try:
-                inversion_mensual = float(input("Ingrese su inversión mensual: "))
-                meses = int(input("Ingrese el número de meses: "))
-                interes = float(input("Ingrese la tasa de interés mensual: ")) / 100
-            except ValueError:
-                print("Error: Por favor, ingrese valores numéricos válidos.")
-                input("Presione Enter para continuar...")
-                continue
-            input("\nPresione Enter para volver al menú...")
-            
-        elif opcion == '3':
-            limpiar_consola()
-            print("=== PROYECCIÓN ===")
-            input("\nPresione Enter para volver al menú...")
-            
-        elif opcion == '4':
-            print("\nSaliendo del programa...")
-            break
-            
-        else:
-            print("\nOpción no válida. Intente nuevamente.")
-            input("Presione Enter para continuar...")
-
-menu()
-
 class Ahorro:
-    def __init__ (self, inversion_mensual, meses, tasa_inflacion, interes):
-        self.__inversion_mensual = inversion_mensual
-        self.__meses = meses
-        self.__tasa_inflacion = tasa_inflacion
-        self.__interes = interes
-        self.__ahorro_total = 0
 
-class InteresAnual(Ahorro):
-    def __init__ (self, TasaMensual):
-        super(). __init__(self, self.__tasa_inflacion, self.__meses)
-        self.__TasaMensual = TasaMensual
-    def calcular_infacionAnual(self):
-        return (1 + self.__TasaMensual) ** (1/12) - 1
+    def __init__(self, inversion_mensual: float, meses: int, interes_mensual: float, inflacion_anual: float = 4.5):
+        if meses < 0: raise ValueError("Meses no puede ser negativo.")
+        if interes_mensual <= -1: raise ValueError("La tasa mensual debe ser > -100%.")
+        if inflacion_anual <= -1: raise ValueError("La inflación anual debe ser > -100%.")
+        if inversion_mensual < 0: raise ValueError("La inversión mensual no puede ser negativa.")
 
+        self.__inversion_mensual = float(inversion_mensual)
+        self.__meses = int(meses)
+        self.__interes = float(interes_mensual)       
+        self.__inflacion_anual = float(inflacion_anual)
+        self.__ahorro_total = 0.0                     
 
-
-
+  
 
     
+    def inflacion_mensual(self) -> float:
+    
+        return (1 + self.__inflacion_anual)**(1/12) - 1
+    
+
+    def fv_nominal(self, pv: float = 0.0) -> float:
+
+        i = self.__interes
+        n = self.__meses
+        PMT = self.__inversion_mensual
+        if n == 0:
+            return float(pv)
+        if abs(i) < 1e-12:
+            return float(pv) + PMT * n
+        return float(pv) * (1 + i)**n + PMT * (((1 + i)**n - 1) / i)
+
+    def fv_real(self, pv: float = 0.0) -> float:
+        fv = self.fv_nominal(pv)
+        pi_m = self.inflacion_mensual()
+        n = self.__meses
+        if abs(pi_m) < 1e-12:
+            return fv
+        return fv / ((1 + pi_m)**n)
+
