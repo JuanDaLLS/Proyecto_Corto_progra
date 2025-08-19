@@ -1,9 +1,13 @@
 class Ahorro:
     def __init__(self, inversion_mensual: float, meses: int, interes_mensual: float, inflacion_anual: float = 0.0):
-        if meses < 0: raise ValueError("Meses no puede ser negativo.")
-        if interes_mensual <= -1: raise ValueError("La tasa mensual debe ser > -100%.")
-        if inflacion_anual <= -1: raise ValueError("La inflación anual debe ser > -100%.")
-        if inversion_mensual < 0: raise ValueError("La inversión mensual no puede ser negativa.")
+        if meses < 0:
+            raise ValueError("Meses no puede ser negativo.")
+        if interes_mensual <= -1:
+            raise ValueError("La tasa mensual debe ser > -100%.")
+        if inflacion_anual <= -1:
+            raise ValueError("La inflación anual debe ser > -100%.")
+        if inversion_mensual < 0:
+            raise ValueError("La inversión mensual no puede ser negativa.")
 
         self.__inversion_mensual = float(inversion_mensual)
         self.__meses = int(meses)
@@ -12,23 +16,24 @@ class Ahorro:
         self.__ahorro_total = 0.0
 
     def inflacion_mensual(self) -> float:
-        return (1 + self.__inflacion_anual)**(1/12) - 1
+        return (1 + self.__inflacion_anual) ** (1/12) - 1
 
     def fv_nominal(self, pv=0):
-        i = self.interes
-        n = self.meses
-        pago = self.pago
+        i = self.__interes
+        n = self.__meses
+        pago = self.__inversion_mensual
+
         if n == 0:
             return pv
         if i == 0:
             return pv + pago * n
         return pv * (1 + i) ** n + pago * (((1 + i) ** n - 1) / i)
 
-
     def fv_real(self, pv=0):
         fv = self.fv_nominal(pv)
         pi_m = self.inflacion_mensual()
-        n = self.meses
+        n = self.__meses
+
         if pi_m == 0:
             return fv
         return fv / ((1 + pi_m) ** n)
@@ -40,8 +45,8 @@ class Ahorro:
         return (
             f"Aporte mensual: Q{self.__inversion_mensual:,.2f}\n"
             f"Meses: {self.__meses}\n"
-            f"Tasa mensual: {self.__interes*100:.4f}%\n"
-            f"Inflación anual: {self.__inflacion_anual*100:.2f}%\n"
+            f"Tasa mensual: {self.__interes * 100:.4f}%\n"
+            f"Inflación anual: {self.__inflacion_anual * 100:.2f}%\n"
             f"FV nominal (Q de futuro): Q{fv_nom:,.2f}\n"
             f"FV real (Q de hoy): Q{fv_real:,.2f}"
         )
