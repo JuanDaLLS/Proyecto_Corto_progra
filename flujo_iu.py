@@ -2,11 +2,13 @@ import os
 from datetime import datetime
 from PROYECTO_1 import Ahorro
 
-def limpiar_consola(): os.system('cls' if os.name == 'nt' else 'clear')  # Limpia según  donde se ejecute
+def limpiar_consola():
+    os.system('cls' if os.name == 'nt' else 'clear')
 
-def obtener_fecha_actual(): return datetime.now().strftime("%d/%m/%Y %H:%M")  # Fecha legible
+def obtener_fecha_actual():
+    return datetime.now().strftime("%d/%m/%Y %H:%M")
 
-def leer_numero(mensaje, porcentaje=False):  # Entrada numérica, permite porcentaje
+def leer_numero(mensaje, porcentaje=False):
     while True:
         valor = input(mensaje)
         if valor == "":
@@ -19,42 +21,40 @@ def leer_numero(mensaje, porcentaje=False):  # Entrada numérica, permite porcen
         except:
             print("Entrada inválida, intente de nuevo.")
 
-def menu(): # Menú principal del programa
+def mostrar_menu():
+    limpiar_consola()
+    print("========== MENÚ PRINCIPAL ==========")
+    print("Fecha:", obtener_fecha_actual())
+    print("----------------------------------------\n")
+    print("1. Instrucciones de uso")
+    print("2. Empezar a ahorrar (definir plan)")
+    print("3. Ver proyección de ahorro")
+    print("4. Ver avances mes a mes")
+    print("5. Salir")
+
+def menu():
     plan_definido = False
-    plan = 0
+    plan = None
 
     while True:
-        limpiar_consola()
-        print("----------------------------------------")
-        print("SECCIÓN: MENÚ PRINCIPAL")
-        print("Fecha:", obtener_fecha_actual())
-        print("----------------------------------------\n")
-
-        print("1. Instrucciones de uso")
-        print("2. Empezar a ahorrar (definir plan)")
-        print("3. Ver proyección de ahorro")
-        print("4. Ver avances mes a mes")
-        print("5. Salir")
-
+        mostrar_menu()
         opcion = input("\nSeleccione una opción: ")
 
         if opcion == "1":
             limpiar_consola()
-            print("----------------------------------------")
-            print("SECCIÓN: INSTRUCCIONES")
+            print("========== INSTRUCCIONES ==========")
             print("Fecha:", obtener_fecha_actual())
             print("----------------------------------------\n")
-
             print("- En la opción 2 define tu inversión mensual, los meses y la tasa de interés mensual.")
             print("- Opcional: puedes ingresar la inflación anual (si no, deja vacío).")
             print("- En la opción 3 verás tu proyección final.")
             print("- En la opción 4 verás la tabla de avances.")
-            input("\nPresione Enter para volver al menú...")
+            print("\n----------------------------------------\n")
+            input("Presione Enter para volver al menú...")
 
         elif opcion == "2":
             limpiar_consola()
-            print("----------------------------------------")
-            print("SECCIÓN: DEFINIR PLAN DE AHORRO")
+            print("========== DEFINIR PLAN DE AHORRO ==========")
             print("Fecha:", obtener_fecha_actual())
             print("----------------------------------------\n")
 
@@ -74,33 +74,34 @@ def menu(): # Menú principal del programa
                 print(f"- Inflación anual: {inflacion_anual * 100}%")
             except:
                 print("\nError, verifique los datos ingresados.")
-            input("\nPresione Enter para volver al menú...")
+            print("\n----------------------------------------\n")
+            input("Presione Enter para volver al menú...")
 
         elif opcion == "3":
             limpiar_consola()
-            print("----------------------------------------")
-            print("SECCIÓN: PROYECCIÓN DE AHORRO")
+            print("========== PROYECCIÓN DE AHORRO ==========")
             print("Fecha:", obtener_fecha_actual())
             print("----------------------------------------\n")
 
             if not plan_definido:
                 print("Primero debe definir su plan en la opción 2.")
             else:
-                print(plan.resumen(0.0))
-            input("\nPresione Enter para volver al menú...")
+                print(plan.resumen())
+            print("\n----------------------------------------\n")
+            input("Presione Enter para volver al menú...")
 
         elif opcion == "4":
             limpiar_consola()
-            print("----------------------------------------")
-            print("SECCIÓN: AVANCES MES A MES")
+            print("========== AVANCES MES A MES ==========")
             print("Fecha:", obtener_fecha_actual())
             print("----------------------------------------\n")
 
             if not plan_definido:
                 print("Primero debe definir su plan en la opción 2.")
             else:
-                print(plan.tabla_avances(0.0))
-            input("\nPresione Enter para volver al menú...")
+                print(plan.tabla_avances())
+            print("\n----------------------------------------\n")
+            input("Presione Enter para volver al menú...")
 
         elif opcion == "5":
             print("\nSaliendo del programa...")
@@ -108,6 +109,8 @@ def menu(): # Menú principal del programa
 
         else:
             print("\nOpción no válida. Intente nuevamente.")
+            print("\n----------------------------------------\n")
             input("Presione Enter para continuar...")
 
-if __name__ == "__main__": menu()  # Punto de entrada
+if __name__ == "__main__":
+    menu()
