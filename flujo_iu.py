@@ -32,13 +32,25 @@ def mostrar_menu():
     print("4. Ver avances mes a mes")
     print("5. Salir")
 
+def interpretar_opcion(entrada):
+    entrada = entrada.strip().lower()
+    opciones = {
+        "1": "1", "uno": "1",
+        "2": "2", "dos": "2",
+        "3": "3", "tres": "3",
+        "4": "4", "cuatro": "4",
+        "5": "5", "cinco": "5"
+    }
+    return opciones.get(entrada, None)
+
 def menu():
     plan_definido = False
     plan = None
 
     while True:
         mostrar_menu()
-        opcion = input("\nSeleccione una opción: ")
+        entrada = input("\nSeleccione una opción: ")
+        opcion = interpretar_opcion(entrada)
 
         if opcion == "1":
             limpiar_consola()
